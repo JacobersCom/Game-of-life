@@ -2,15 +2,17 @@
 
 wxIMPLEMENT_APP(App);
 
-App::App()
-{}
+App::App() {
 
-App::~App() 
-{}
+}
 
+App::~App() {
 
+}
+
+// Definition of the OnInit method
 bool App::OnInit() {
-	main = new MainWindow;
-	main->Show();
-	return true;
+    mainWindow = new MainWindow(); // Instantiate the MainWindow
+    mainWindow->Show(true); // Show the main window
+    return true; // Return true to indicate successful initialization
 }
