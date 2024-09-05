@@ -10,7 +10,7 @@ App::~App()
 
 
 bool App::OnInit() {
-	MainWindow* main = new MainWindow;
+	main = new MainWindow;
 	main->Show();
 	return true;
 }

@@ -11,6 +11,6 @@ public:
 	DrawingPanel(MainWindow* main);
 	~DrawingPanel();
 
-	void onPaint(wxPaintEvent&);
+	void onPaint(wxPaintEvent& event);
 };
 
