@@ -1,16 +1,20 @@
-#pragma once
+#ifndef DRAWINGPANEL_H
+#define DRAWINGPANEL_H
+
 #include "wx/wx.h"
-#include "MainWindow.h"
-#include "wx/graphics.h"
-#include "wx/dcbuffer.h"
 
-class DrawingPanel : public wxPanel
-{
+// Declaration of the DrawingPanel class, inheriting from wxPanel
+class DrawingPanel : public wxPanel {
 public:
-	
-	DrawingPanel(MainWindow* main);
-	~DrawingPanel();
+    // Constructor for DrawingPanel, taking a parent window as an argument
+    DrawingPanel(wxWindow* parent);
 
-	void onPaint(wxPaintEvent& event);
+    // Destructor for DrawingPanel
+    ~DrawingPanel();
+
+private:
+    // Declaration of the OnPaint method, which will handle paint events
+    void OnPaint(wxPaintEvent& event);
 };
 
+#endif // DRAWINGPANEL_H

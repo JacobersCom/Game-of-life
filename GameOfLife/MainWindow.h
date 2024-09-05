@@ -1,14 +1,21 @@
-#pragma once
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
+
 #include "wx/wx.h"
 #include "DrawingPanel.h"
 
-class MainWindow : public wxFrame
-{
+// Declaration of the MainWindow class, inheriting from wxFrame
+class MainWindow : public wxFrame {
 public:
+    // Constructor for MainWindow
+    MainWindow();
 
-	MainWindow();
-	~MainWindow();
+    // Destructor for MainWindow
+    ~MainWindow();
 
-private: 
-	DrawingPanel* draw; 
+private:
+    // Pointer to the DrawingPanel instance
+    DrawingPanel* drawingPanel;
 };
+
+#endif // MAINWINDOW_H
