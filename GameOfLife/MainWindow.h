@@ -1,11 +1,14 @@
 #pragma once
 #include "wx/wx.h"
-class MainWindow : public wxFrame 
+#include "DrawingPanel.h"
+
+class MainWindow : public wxFrame
 {
-public: 
-	 
+public:
+
 	MainWindow();
 	~MainWindow();
 
+private: 
+	DrawingPanel* draw; 
 };
-
