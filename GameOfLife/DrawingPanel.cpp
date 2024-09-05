@@ -3,7 +3,7 @@
 
 
 DrawingPanel::DrawingPanel(MainWindow* parent)
-	: wxPanel(parent, wxID_ANY)
+	: wxPanel(parent,wxID_ANY)
 {   
 	this->SetBackgroundStyle(wxBG_STYLE_PAINT);
 	this->Bind(wxEVT_PAINT, &DrawingPanel::onPaint, this);

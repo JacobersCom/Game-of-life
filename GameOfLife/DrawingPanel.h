@@ -8,9 +8,12 @@ class DrawingPanel : public wxPanel
 {
 public:
 	
-	DrawingPanel(MainWindow* main);
+	DrawingPanel(MainWindow* parent);
 	~DrawingPanel();
 
 	void onPaint(wxPaintEvent& event);
+
+private:
+	DrawingPanel* draw;
 };
 
