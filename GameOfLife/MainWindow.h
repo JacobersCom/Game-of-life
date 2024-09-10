@@ -13,6 +13,8 @@ public:
     // Destructor for MainWindow
     ~MainWindow();
 
+    void ReSize(wxSizeEvent& event);
+
 private:
     // Pointer to the DrawingPanel instance
     DrawingPanel* drawingPanel;

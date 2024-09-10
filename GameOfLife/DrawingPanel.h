@@ -12,7 +12,11 @@ public:
     // Destructor for DrawingPanel
     ~DrawingPanel();
 
-	void onPaint(wxPaintEvent& event);
+	void OnPaint(wxPaintEvent& event);
+    void setSize(wxSize& size);
+
+private:
+    int gridSize = 15;
 };
 
 #endif // DRAWINGPANEL_H
