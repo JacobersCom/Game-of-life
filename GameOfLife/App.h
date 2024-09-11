@@ -12,6 +12,7 @@ private:
 public:
 	App();
 	~App();
+	
 	// Override of the OnInit method, called on application startup
 	virtual bool OnInit();
 };
