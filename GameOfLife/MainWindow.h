@@ -4,6 +4,7 @@
 #include "wx/wx.h"
 #include "DrawingPanel.h"
 #include <vector>
+
 class DrawingPanel;
 // Declaration of the MainWindow class, inheriting from wxFrame
 class MainWindow : public wxFrame {
@@ -19,7 +20,7 @@ public:
 
 
     // to initialize the gird vector
-  void GridInitializtion(int gridSize); 
+  void GridInitializtion(); 
  
 
 
@@ -27,7 +28,7 @@ public:
 private:
     // Pointer to the DrawingPanel instance
     DrawingPanel* drawing;
-    int grid = 15; 
+    int gridSize = 15; 
     std::vector<std::vector<bool>> gameBoard;
     
 };

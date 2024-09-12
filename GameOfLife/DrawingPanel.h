@@ -14,16 +14,18 @@ public:
     // Destructor for DrawingPanel
     ~DrawingPanel();
 
-    
-	void OnPaint(wxPaintEvent& event);
     void setSize(wxSize& size);
-    void SetGridSize(int newGird);
-    void onClick(wxMouseEvent& event);
+    void SetGridSize(int newGrid);
     
 private:
-    int gridSize = 15;
+    int gridSize;
     std::vector<std::vector<bool>>& drawingBoard;
-    
+    int cellHeight;
+    int cellWidth;
+
+    void onClick(wxMouseEvent& event);
+    void Cell();
+	void OnPaint(wxPaintEvent& event);
 };
 
 #endif // DRAWINGPANEL_H

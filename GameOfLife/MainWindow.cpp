@@ -4,11 +4,11 @@
 MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Game of Life", wxPoint(0, 0), wxSize(800, 600)) { // Initialize the base wxFrame class with position and size
     
     // Initialize the DrawingPanel with "this" as the parent
-   drawing = new DrawingPanel(this, gameBoard); 
+    drawing = new DrawingPanel(this, gameBoard); 
     
     this->Bind(wxEVT_SIZE, &MainWindow::ReSize, this);
     
-    GridInitializtion(grid);
+    GridInitializtion();
 
     
 }
@@ -20,8 +20,11 @@ MainWindow::~MainWindow() {
 
 void MainWindow::ReSize(wxSizeEvent& event)
 {
+
+    GridInitializtion();
+
     // Saving window size as a wxSize object
-    wxSize size(800,600); 
+    wxSize size = this->GetClientSize();
 
     // Calling the setSize method from the drawing panel class
     drawing->setSize(size); 
@@ -31,12 +34,15 @@ void MainWindow::ReSize(wxSizeEvent& event)
 
 }
 
-void MainWindow::GridInitializtion(int gridSize)
+void MainWindow::GridInitializtion()
 {
+    wxSize size = this->GetClientSize();
+    
+    gameBoard.resize(gridSize);
 
     for (size_t i = 0; i < gameBoard.size(); i++)
     {
-        gameBoard[i].resize(gridSize); 
+        gameBoard[i].resize(gridSize);
     }
     drawing->SetGridSize(gridSize);
 }

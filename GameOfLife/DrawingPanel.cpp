@@ -3,7 +3,7 @@
 #include "wx/dcbuffer.h"
 
 // Definition of the DrawingPanel constructor
-DrawingPanel::DrawingPanel(MainWindow* parent, std::vector<std::vector<bool>>& gameBoard) : drawingBoard(gameBoard), wxPanel(parent, wxID_ANY) { // Initialize the base wxPanel class with the parent window and an ID
+DrawingPanel::DrawingPanel(MainWindow* parent, std::vector<std::vector<bool>>& gameBoard) : drawingBoard(gameBoard), wxPanel(parent) { // Initialize the base wxPanel class with the parent window and an ID
    
     // Set the background style to paint to control rendering
     this->SetBackgroundStyle(wxBG_STYLE_PAINT);
@@ -20,6 +20,19 @@ DrawingPanel::~DrawingPanel() {
     // Empty destructor
 }
 
+
+
+void DrawingPanel::Cell()
+{
+    // Grabing the Window size to access the Get width and heigh methods
+    wxSize panel = this->GetClientSize();
+
+    // Taking get width and dividing it by the grid size (15)
+    cellWidth = (panel.GetWidth() / gridSize);
+
+    // Taking get height and dividing it by the grid size (15)
+    cellHeight = (panel.GetHeight() / gridSize);
+}
 
 // Definition of the OnPaint method, which handles paint events
 void DrawingPanel::OnPaint(wxPaintEvent& event)
@@ -46,33 +59,26 @@ void DrawingPanel::OnPaint(wxPaintEvent& event)
     // Set the brush color to white for filling shapes
     context->SetBrush(*wxWHITE_BRUSH); 
     
-    // Grabing the Window size to access the Get width and heigh methods
-    wxSize panel = GetClientSize(); 
-    
-    // Taking get width and dividing it by the grid size (15)
-    int cellWidth = panel.GetWidth() / gridSize; 
-
-    // Taking get height and dividing it by the grid size (15)
-    int cellHeight = panel.GetHeight() / gridSize; 
-
-   
-    
-
     // loop over the girdSize and adding rows to it
     for (int row = 0; row < gridSize; ++row) 
     {
         // looping over the girdSize and adding columes to it
         for (int col = 0; col < gridSize; ++col)
         {
-            if (drawingBoard[row][col] == true)
-            {
-                
-            }
             // x is col times cellwidth
-            int x = col * cellWidth;
+            int x = row * cellWidth;
 
             // y is row times cell height
-            int y = row * cellHeight;
+            int y = col * cellHeight;
+
+                if (drawingBoard[row][col])
+                {
+                    context->SetBrush(*wxRED);
+                }
+                else
+                {
+                    context->SetBrush(*wxWHITE);
+                }
 
             // Taking the context variable and calling DrawRec and passing in the x,y and width and height
             context->DrawRectangle(x, y, cellWidth, cellHeight); 
@@ -85,19 +91,20 @@ void DrawingPanel::OnPaint(wxPaintEvent& event)
 
 void DrawingPanel::setSize(wxSize& size)
 {
-    // wxPanelbase object
-    wxPanelBase base; 
-
     // Calling set size on the base and passing in the size reference paramenter
-    base.SetSize(size); 
+    wxPanel::SetSize(size); 
+
+    Cell();
 
     // It erases the orginal back ground and prints another during resizing the window
-    Refresh(); 
+    this->Refresh(); 
 }
 
 void DrawingPanel::SetGridSize(int newGrid)
 {
     gridSize = newGrid;
+    Cell();
+    this->Refresh();
 }
 
 void DrawingPanel::onClick(wxMouseEvent& event)
@@ -105,15 +112,16 @@ void DrawingPanel::onClick(wxMouseEvent& event)
     int x = event.GetX();
     int y = event.GetY();
 
-    wxSize panel = GetClientSize(); // Grabing the Window size to access the Get width and heigh methods
-
-    int cellWidth = panel.GetWidth() / gridSize; // Taking get width and dividing it by the grid size (15)
-    int cellHeight = panel.GetHeight() / gridSize; // Taking get height and dividing it by the grid size (15)
-
+   
     int rowClicked = x / cellWidth;
     int colClicked = y / cellHeight;
-    drawingBoard[rowClicked][colClicked];
-    Refresh();
+    
+    if (rowClicked >= 0 && rowClicked < gridSize && colClicked >= 0 && colClicked < gridSize)
+    {
+        drawingBoard[rowClicked][colClicked] = !drawingBoard[rowClicked][colClicked];
+       
+         Refresh();
+    }
 
 }
 
