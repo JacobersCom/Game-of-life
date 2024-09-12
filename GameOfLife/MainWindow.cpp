@@ -1,12 +1,13 @@
 #include "MainWindow.h"
+wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
+EVT_SIZE(MainWindow::ReSize)
+wxEND_EVENT_TABLE()
 
 // Definition of the MainWindow constructor
 MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Game of Life", wxPoint(0, 0), wxSize(800, 600)) { // Initialize the base wxFrame class with position and size
     
     // Initialize the DrawingPanel with "this" as the parent
     drawing = new DrawingPanel(this, gameBoard); 
-    
-    this->Bind(wxEVT_SIZE, &MainWindow::ReSize, this);
     
     GridInitializtion();
 

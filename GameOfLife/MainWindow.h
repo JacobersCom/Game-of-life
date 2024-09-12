@@ -23,7 +23,7 @@ public:
   void GridInitializtion(); 
  
 
-
+  wxDECLARE_EVENT_TABLE();
 
 private:
     // Pointer to the DrawingPanel instance
