@@ -2,17 +2,18 @@
 #include "wx/graphics.h"
 #include "wx/dcbuffer.h"
 
+wxBEGIN_EVENT_TABLE(DrawingPanel, wxPanel)
+EVT_PAINT(DrawingPanel::OnPaint)
+EVT_LEFT_UP(DrawingPanel::onClick)
+wxEND_EVENT_TABLE()
+
+
 // Definition of the DrawingPanel constructor
-DrawingPanel::DrawingPanel(MainWindow* parent, std::vector<std::vector<bool>>& gameBoard) : drawingBoard(gameBoard), wxPanel(parent) { // Initialize the base wxPanel class with the parent window and an ID
+DrawingPanel::DrawingPanel(MainWindow* parent, std::vector<std::vector<bool>>& gameBoard) : mainWindow(static_cast<MainWindow*>(parent)), gridSize(30), drawingBoard(gameBoard), wxPanel(parent) { // Initialize the base wxPanel class with the parent window and an ID
    
     // Set the background style to paint to control rendering
     this->SetBackgroundStyle(wxBG_STYLE_PAINT);
 
-    // Bind the paint event to the OnPaint method
-    this->Bind(wxEVT_PAINT, &DrawingPanel::OnPaint, this);
-
-    // Bind the left up event to the onCLick method
-    this->Bind(wxEVT_LEFT_UP, &DrawingPanel::onClick, this); 
 }
 
 // Definition of the DrawingPanel destructor
@@ -115,13 +116,25 @@ void DrawingPanel::onClick(wxMouseEvent& event)
    
     int rowClicked = x / cellWidth;
     int colClicked = y / cellHeight;
-    
     if (rowClicked >= 0 && rowClicked < gridSize && colClicked >= 0 && colClicked < gridSize)
     {
-        drawingBoard[rowClicked][colClicked] = !drawingBoard[rowClicked][colClicked];
-       
-         Refresh();
+        if (drawingBoard[rowClicked][colClicked])
+        {
+            drawingBoard[rowClicked][colClicked] = false;
+            mainWindow->UpdateStatusBar(-1);
+        }
+        else
+        {
+            drawingBoard[rowClicked][colClicked] = true;
+            mainWindow->UpdateStatusBar(1);
+
+        }
+        Refresh();
     }
+  
+
+
+
 
 }
 

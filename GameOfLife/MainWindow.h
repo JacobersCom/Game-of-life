@@ -18,18 +18,25 @@ public:
     // To Resize the window without jiddering
     void ReSize(wxSizeEvent& event);
 
-
     // to initialize the gird vector
   void GridInitializtion(); 
  
+  //Update status bar to count gen and LivCell count
+  void UpdateStatusBar(int alive);
+  void StatusBarText();
 
   wxDECLARE_EVENT_TABLE();
+
 
 private:
     // Pointer to the DrawingPanel instance
     DrawingPanel* drawing;
     int gridSize = 15; 
     std::vector<std::vector<bool>> gameBoard;
+    int Gen; 
+    int livCells; 
+    wxStatusBar* statusBar;
+   
     
 };
 

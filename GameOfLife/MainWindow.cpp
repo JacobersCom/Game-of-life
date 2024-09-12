@@ -4,19 +4,22 @@ EVT_SIZE(MainWindow::ReSize)
 wxEND_EVENT_TABLE()
 
 // Definition of the MainWindow constructor
-MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Game of Life", wxPoint(0, 0), wxSize(800, 600)) { // Initialize the base wxFrame class with position and size
-    
+MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Game of Life", wxPoint(0, 0), wxSize(800, 600)), Gen(0), livCells(0) { // Initialize the base wxFrame class with position and size
+    statusBar = CreateStatusBar();
+    StatusBarText();
+   
     // Initialize the DrawingPanel with "this" as the parent
     drawing = new DrawingPanel(this, gameBoard); 
     
     GridInitializtion();
 
-    
+    this->Layout();
 }
 
 // Definition of the MainWindow destructor
 MainWindow::~MainWindow() {
-    // Empty destructor
+   
+    delete drawing;
 }
 
 void MainWindow::ReSize(wxSizeEvent& event)
@@ -47,5 +50,18 @@ void MainWindow::GridInitializtion()
     }
     drawing->SetGridSize(gridSize);
 }
+
+void MainWindow::StatusBarText()
+{
+    std::string bar = "   \t\t\t\t\t\t\t\t\t\t\t\t\tGeneration: " + std::to_string(Gen) + "\t\t\t\t|\t\t\t\t" + std::to_string(livCells) + " :Living";
+    statusBar->SetStatusText(bar);
+}
+
+void MainWindow::UpdateStatusBar(int alive)
+{  
+    livCells += alive;
+    StatusBarText();
+}
+
 
 

@@ -5,6 +5,8 @@
 #include "wx/wx.h"
 #include <vector>
 class MainWindow;
+class App;
+
 // Declaration of the DrawingPanel class, inheriting from wxPanel
 class DrawingPanel : public wxPanel {
 public:
@@ -16,12 +18,15 @@ public:
 
     void setSize(wxSize& size);
     void SetGridSize(int newGrid);
+
+    wxDECLARE_EVENT_TABLE();
     
 private:
     int gridSize;
     std::vector<std::vector<bool>>& drawingBoard;
     int cellHeight;
     int cellWidth;
+    MainWindow* mainWindow;
 
     void onClick(wxMouseEvent& event);
     void Cell();
