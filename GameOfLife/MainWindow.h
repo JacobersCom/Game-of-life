@@ -31,6 +31,8 @@ public:
   void PauseButton(wxCommandEvent& event);
   void NextButton(wxCommandEvent& event);
 
+  int NeightborCounter(int row, int col);
+
   void addToolFields(int ID, std::string name, wxBitmap icon);
 
   wxDECLARE_EVENT_TABLE();

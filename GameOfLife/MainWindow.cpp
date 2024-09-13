@@ -104,6 +104,37 @@ void MainWindow::NextButton(wxCommandEvent& event)
 {
 }
 
+int MainWindow::NeightborCounter(int row, int col)
+{
+    int Livecount = 0;
+
+    row = gameBoard.size();
+    col = gameBoard[0].size();
+
+    for (size_t i = -1; i <= 1; ++i)
+    {
+        for (size_t j = -1; j <= 1; ++j)
+        {
+            if (i == 0 && j == 0)
+            {
+                continue;
+            }
+            int mRow = row + i;
+            int mCol = col + j;
+
+            if (mRow >= 0 && mRow < gridSize && mCol >= 0 && mCol < gridSize)
+            {
+                if (gameBoard[mRow][mCol])
+                {
+                    ++Livecount;
+                }
+            }
+        }
+    }
+    
+    return Livecount;
+}
+
 void MainWindow::addToolFields(int ID, std::string name, wxBitmap icon)
 {
     toolBar->AddTool(ID, name, icon);
