@@ -103,21 +103,26 @@ void DrawingPanel::setSize(wxSize& size)
 
 void DrawingPanel::SetGridSize(int newGrid)
 {
+    // Calulates the cell width and height and refreshes the current obj
     gridSize = newGrid;
     Cell();
     this->Refresh();
 }
 
 void DrawingPanel::onClick(wxMouseEvent& event)
-{
+{ 
+    //Getting the point of where the mouse clicked
     int x = event.GetX();
     int y = event.GetY();
 
-   
+   // Using where the mouse clicked to calulate the row and col 
     int rowClicked = x / cellWidth;
     int colClicked = y / cellHeight;
+
+    // checking if where the mouse clicked was within range of the grid
     if (rowClicked >= 0 && rowClicked < gridSize && colClicked >= 0 && colClicked < gridSize)
     {
+        // if drawingBoard is true set it to false and take from the living count
         if (drawingBoard[rowClicked][colClicked])
         {
             drawingBoard[rowClicked][colClicked] = false;
@@ -125,10 +130,12 @@ void DrawingPanel::onClick(wxMouseEvent& event)
         }
         else
         {
+            //else set it to true and add to the count
             drawingBoard[rowClicked][colClicked] = true;
             mainWindow->UpdateStatusBar(1);
 
         }
+        //refresh the onPaint method
         Refresh();
     }
   

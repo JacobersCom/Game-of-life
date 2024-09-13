@@ -16,9 +16,13 @@ public:
     // Destructor for DrawingPanel
     ~DrawingPanel();
 
+    // custom set size method used with the resize method of mainwindow 
     void setSize(wxSize& size);
+
+    // Sets a new grid set
     void SetGridSize(int newGrid);
 
+    // Event table declaration
     wxDECLARE_EVENT_TABLE();
     
 private:
@@ -28,8 +32,13 @@ private:
     int cellWidth;
     MainWindow* mainWindow;
 
+    // Finds where the mouse is locatied 
     void onClick(wxMouseEvent& event);
+
+    // Calulates the cell height and width
     void Cell();
+
+    // Handles all the painting in the program 
 	void OnPaint(wxPaintEvent& event);
 };
 

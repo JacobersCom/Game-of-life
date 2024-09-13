@@ -24,19 +24,28 @@ public:
   //Update status bar to count gen and LivCell count
   void UpdateStatusBar(int alive);
   
+  // Giving text to the status bar
   void StatusBarText();
 
+  //Button methods
   void PlayButton(wxCommandEvent& event);
   void TrashButton(wxCommandEvent& event);
   void PauseButton(wxCommandEvent& event);
   void NextButton(wxCommandEvent& event);
 
+  //Calulating the amount of people around to see if the gen will live or die
   int NeighborCounter(int row, int col);
+
+  // Calls the method above and adds to the gen memeber field
   void NextGen();
+
+  //Adds a timer to my play button event
   void Timer(wxTimerEvent& event);
 
+  //Helper method for my tool bar
   void addToolFields(int ID, std::string name, wxBitmap icon);
 
+  //Event table declaration 
   wxDECLARE_EVENT_TABLE();
 
 
