@@ -94,6 +94,20 @@ void MainWindow::PlayButton(wxCommandEvent& event)
 
 void MainWindow::TrashButton(wxCommandEvent& event)
 {
+    for (int i = 0; i < gameBoard.size(); i++)
+    {
+        for (int j = 0; j < gameBoard.size(); j++)
+        {
+            gameBoard[i][j] = false;
+        }
+    }
+
+    Gen = 0;
+    livCells = 0;
+
+    UpdateStatusBar(livCells, Gen);
+
+    Refresh();
 }
 
 void MainWindow::PauseButton(wxCommandEvent& event)
@@ -195,7 +209,7 @@ void MainWindow::addToolFields(int ID, std::string name, wxBitmap icon)
 void MainWindow::UpdateStatusBar(int alive, int gen)
 {  
     livCells += alive;
-    
+    gen += gen;
     StatusBarText();
 }
 
