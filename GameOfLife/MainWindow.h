@@ -22,7 +22,7 @@ public:
   void GridInitializtion(); 
  
   //Update status bar to count gen and LivCell count
-  void UpdateStatusBar(int alive);
+  void UpdateStatusBar(int alive, int gen);
   
   void StatusBarText();
 
@@ -31,7 +31,8 @@ public:
   void PauseButton(wxCommandEvent& event);
   void NextButton(wxCommandEvent& event);
 
-  int NeightborCounter(int row, int col);
+  int NeighborCounter(int row, int col);
+  void NextGen();
 
   void addToolFields(int ID, std::string name, wxBitmap icon);
 

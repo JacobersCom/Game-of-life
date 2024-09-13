@@ -121,12 +121,12 @@ void DrawingPanel::onClick(wxMouseEvent& event)
         if (drawingBoard[rowClicked][colClicked])
         {
             drawingBoard[rowClicked][colClicked] = false;
-            mainWindow->UpdateStatusBar(-1);
+            mainWindow->UpdateStatusBar(-1, -1);
         }
         else
         {
             drawingBoard[rowClicked][colClicked] = true;
-            mainWindow->UpdateStatusBar(1);
+            mainWindow->UpdateStatusBar(1, 1);
 
         }
         Refresh();
