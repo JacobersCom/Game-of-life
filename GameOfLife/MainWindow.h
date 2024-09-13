@@ -22,7 +22,7 @@ public:
   void GridInitializtion(); 
  
   //Update status bar to count gen and LivCell count
-  void UpdateStatusBar(int alive, int gen);
+  void UpdateStatusBar(int alive);
   
   void StatusBarText();
 
@@ -33,6 +33,7 @@ public:
 
   int NeighborCounter(int row, int col);
   void NextGen();
+  void Timer(wxTimerEvent& event);
 
   void addToolFields(int ID, std::string name, wxBitmap icon);
 
@@ -48,7 +49,8 @@ private:
     int livCells; 
     wxStatusBar* statusBar;
     wxToolBar* toolBar;
-    
+    wxTimer* timer;
+    int time = 50;
 };
 
 #endif // MAINWINDOW_H

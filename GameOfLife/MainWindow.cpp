@@ -10,6 +10,7 @@ EVT_MENU(10000, PlayButton)
 EVT_MENU(10001, PauseButton)
 EVT_MENU(10002, TrashButton)
 EVT_MENU(10003, NextButton)
+EVT_TIMER(10004, MainWindow::Timer)
 wxEND_EVENT_TABLE()
 
 // Definition of the MainWindow constructor
@@ -19,6 +20,8 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Game of Life", wxPoint(0,
     StatusBarText();
     
     toolBar = CreateToolBar();
+
+    timer = new wxTimer(this, 10004);
 
     //Bitmap for the playerIcon that takes the C style char array
     wxBitmap playicon(play_xpm);
@@ -89,7 +92,7 @@ void MainWindow::StatusBarText()
 
 void MainWindow::PlayButton(wxCommandEvent& event)
 {
-    NextGen();
+    timer->Start(time);
 }
 
 void MainWindow::TrashButton(wxCommandEvent& event)
@@ -105,17 +108,19 @@ void MainWindow::TrashButton(wxCommandEvent& event)
     Gen = 0;
     livCells = 0;
 
-    UpdateStatusBar(livCells, Gen);
-
+    UpdateStatusBar(livCells);
+    timer->Stop();
     Refresh();
 }
 
 void MainWindow::PauseButton(wxCommandEvent& event)
 {
+    timer->Stop();
 }
 
 void MainWindow::NextButton(wxCommandEvent& event)
 {
+    NextGen();
 }
 
 int MainWindow::NeighborCounter(int row, int col)
@@ -195,10 +200,16 @@ void MainWindow::NextGen()
     gameBoard.swap(sandbox);
 
     Gen += 1;
-    UpdateStatusBar(Gen, livCells);
+    UpdateStatusBar(livCells);
 
     Refresh();
    
+}
+
+void MainWindow::Timer(wxTimerEvent& event)
+{
+    NextGen();
+    time;
 }
 
 void MainWindow::addToolFields(int ID, std::string name, wxBitmap icon)
@@ -206,10 +217,10 @@ void MainWindow::addToolFields(int ID, std::string name, wxBitmap icon)
     toolBar->AddTool(ID, name, icon);
 }
 
-void MainWindow::UpdateStatusBar(int alive, int gen)
+void MainWindow::UpdateStatusBar(int alive)
 {  
     livCells += alive;
-    gen += gen;
+   
     StatusBarText();
 }
 
