@@ -23,7 +23,15 @@ public:
  
   //Update status bar to count gen and LivCell count
   void UpdateStatusBar(int alive);
+  
   void StatusBarText();
+
+  void PlayButton(wxCommandEvent& event);
+  void TrashButton(wxCommandEvent& event);
+  void PauseButton(wxCommandEvent& event);
+  void NextButton(wxCommandEvent& event);
+
+  void addToolFields(int ID, std::string name, wxBitmap icon);
 
   wxDECLARE_EVENT_TABLE();
 
@@ -36,7 +44,7 @@ private:
     int Gen; 
     int livCells; 
     wxStatusBar* statusBar;
-   
+    wxToolBar* toolBar;
     
 };
 
