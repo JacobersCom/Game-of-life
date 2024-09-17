@@ -9,11 +9,11 @@ wxEND_EVENT_TABLE()
 
 
 // Definition of the DrawingPanel constructor
-DrawingPanel::DrawingPanel(MainWindow* parent, std::vector<std::vector<bool>>& gameBoard) : mainWindow(static_cast<MainWindow*>(parent)), gridSize(30), drawingBoard(gameBoard), wxPanel(parent) { // Initialize the base wxPanel class with the parent window and an ID
+DrawingPanel::DrawingPanel(MainWindow* parent, std::vector<std::vector<bool>>& gameBoard, gameSetting* settings) : mainWindow(static_cast<MainWindow*>(parent)), drawingBoard(gameBoard), wxPanel(parent), gameSettings(settings) { // Initialize the base wxPanel class with the parent window and an ID
    
     // Set the background style to paint to control rendering
     this->SetBackgroundStyle(wxBG_STYLE_PAINT);
-
+    int gridSize = gameSettings->GetGridSize();
 }
 
 // Definition of the DrawingPanel destructor
@@ -25,6 +25,7 @@ DrawingPanel::~DrawingPanel() {
 
 void DrawingPanel::Cell()
 {
+    int gridSize = gameSettings->GetGridSize();
     // Grabing the Window size to access the Get width and heigh methods
     wxSize panel = this->GetClientSize();
 
@@ -38,6 +39,7 @@ void DrawingPanel::Cell()
 // Definition of the OnPaint method, which handles paint events
 void DrawingPanel::OnPaint(wxPaintEvent& event)
 {
+    int gridSize = gameSettings->GetGridSize();
     // Create a buffered device context to reduce flicker
     wxAutoBufferedPaintDC dc(this);
    
@@ -74,11 +76,11 @@ void DrawingPanel::OnPaint(wxPaintEvent& event)
 
                 if (drawingBoard[row][col])
                 {
-                    context->SetBrush(*wxRED);
+                    context->SetBrush(gameSettings->GetColor());
                 }
                 else
                 {
-                    context->SetBrush(*wxWHITE);
+                    context->SetBrush(gameSettings->GetDeadColor());
                 }
 
             // Taking the context variable and calling DrawRec and passing in the x,y and width and height
@@ -103,6 +105,7 @@ void DrawingPanel::setSize(wxSize& size)
 
 void DrawingPanel::SetGridSize(int newGrid)
 {
+    int gridSize = gameSettings->GetGridSize();
     // Calulates the cell width and height and refreshes the current obj
     gridSize = newGrid;
     Cell();
@@ -111,6 +114,7 @@ void DrawingPanel::SetGridSize(int newGrid)
 
 void DrawingPanel::onClick(wxMouseEvent& event)
 { 
+    int gridSize = gameSettings->GetGridSize();
     //Getting the point of where the mouse clicked
     int x = event.GetX();
     int y = event.GetY();

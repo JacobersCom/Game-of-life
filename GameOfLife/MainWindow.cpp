@@ -14,7 +14,7 @@ EVT_TIMER(10004, MainWindow::Timer)
 wxEND_EVENT_TABLE()
 
 // Definition of the MainWindow constructor
-MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Game of Life", wxPoint(0, 0), wxSize(800, 600)), Gen(0), livCells(0), time(175) { // Initialize the base wxFrame class with position and size
+MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Game of Life", wxPoint(0, 0), wxSize(800, 600)), Gen(0), livCells(0){ // Initialize the base wxFrame class with position and size
    
     // Creating my status bar
     statusBar = CreateStatusBar();
@@ -43,8 +43,7 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Game of Life", wxPoint(0,
     toolBar->Realize();
 
     // Initialize the DrawingPanel with "this" as the parent
-    drawing = new DrawingPanel(this, gameBoard); 
-    
+    drawing = new DrawingPanel(this, gameBoard, &setting); 
     GridInitializtion();
 
     this->Layout();
@@ -85,16 +84,16 @@ void MainWindow::GridInitializtion()
     wxSize size = this->GetClientSize();
     
     // Making the vector the same size as the grid(15)
-    gameBoard.resize(gridSize);
+    gameBoard.resize(setting.gridSize);
 
     //resizing the vectors inside the vector
     for (size_t i = 0; i < gameBoard.size(); i++)
     {
-        gameBoard[i].resize(gridSize);
+        gameBoard[i].resize(setting.gridSize);
     }
 
     //Calling the set grid size from drawing panel and passing in the gridsize 
-    drawing->SetGridSize(gridSize);
+    drawing->SetGridSize(setting.gridSize);
 }
 
 //Setting the status bar
@@ -109,7 +108,7 @@ void MainWindow::StatusBarText()
 void MainWindow::PlayButton(wxCommandEvent& event)
 {
     //timer is pointer of wxtime pointer to the start method to start a timer for 50 milisecs
-    timer->Start(time);
+    timer->Start(setting.time);
 }
 
 // Clearing the screen
@@ -172,7 +171,7 @@ int MainWindow::NeighborCounter(int row, int col)
             int mCol = col + j;
 
             //Checking if cell is out of range of the grid
-            if (mRow >= 0 && mRow < gridSize && mCol >= 0 && mCol < gridSize)
+            if (mRow >= 0 && mRow < setting.gridSize && mCol >= 0 && mCol < setting.gridSize)
             {
                 //if game board is == to true add to the live count 
                 if (gameBoard[mRow][mCol] == true)
@@ -194,19 +193,19 @@ void MainWindow::NextGen()
     std::vector<std::vector<bool>> sandbox;
 
     // resizing the vector and the vector's vectors to the grid size
-    sandbox.resize(gridSize);
+    sandbox.resize(setting.gridSize);
     for (int i = 0; i < sandbox.size(); i++)
     {
-        sandbox[i].resize(gridSize);
+        sandbox[i].resize(setting.gridSize);
     }
     
     //Setting Living cells to 0
     livCells = 0;
 
     // A nested for loop counting till the size of the grid (15)
-    for (int row = 0; row < gridSize; ++row)
+    for (int row = 0; row < setting.gridSize; ++row)
     {
-        for (int col = 0; col < gridSize; ++col)
+        for (int col = 0; col < setting.gridSize; ++col)
         {
             // Calling NeighborCounter and passing in our iterators to determine how many of the cells neighbors are alive and storing it in a varaible called neighbors
             int neighbors = NeighborCounter(row, col);
@@ -261,7 +260,7 @@ void MainWindow::Timer(wxTimerEvent& event)
     NextGen();
 
     // Passing in my time varaible
-    time;
+    setting.time;
 }
 
 //Helper method for adding the right arugments to the Addtool method

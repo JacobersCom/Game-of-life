@@ -4,8 +4,11 @@
 #include "wx/wx.h"
 #include "DrawingPanel.h"
 #include <vector>
+#include "GameSettings.h"
 
 class DrawingPanel;
+struct gameSetting;
+
 // Declaration of the MainWindow class, inheriting from wxFrame
 class MainWindow : public wxFrame {
 public:
@@ -50,16 +53,14 @@ public:
 
 
 private:
-    // Pointer to the DrawingPanel instance
-    DrawingPanel* drawing;
-    int gridSize = 15; 
+    DrawingPanel* drawing; 
     std::vector<std::vector<bool>> gameBoard;
     int Gen; 
     int livCells; 
     wxStatusBar* statusBar;
     wxToolBar* toolBar;
     wxTimer* timer;
-    int time = 50;
+    gameSetting setting;
 };
 
 #endif // MAINWINDOW_H

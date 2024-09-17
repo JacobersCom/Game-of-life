@@ -6,12 +6,13 @@
 #include <vector>
 class MainWindow;
 class App;
+struct gameSetting;
 
 // Declaration of the DrawingPanel class, inheriting from wxPanel
 class DrawingPanel : public wxPanel {
 public:
     // Constructor for DrawingPanel, taking a parent window as an argument
-    DrawingPanel(MainWindow* parent, std::vector<std::vector<bool>>& gameBoard);
+    DrawingPanel(MainWindow* parent, std::vector<std::vector<bool>>& gameBoard, gameSetting* settings);
 
     // Destructor for DrawingPanel
     ~DrawingPanel();
@@ -26,18 +27,19 @@ public:
     wxDECLARE_EVENT_TABLE();
     
 private:
-    int gridSize;
     std::vector<std::vector<bool>>& drawingBoard;
     int cellHeight;
     int cellWidth;
     MainWindow* mainWindow;
+    gameSetting* gameSettings;
+    
 
     // Finds where the mouse is locatied 
     void onClick(wxMouseEvent& event);
 
     // Calulates the cell height and width
     void Cell();
-
+    
     // Handles all the painting in the program 
 	void OnPaint(wxPaintEvent& event);
 };
