@@ -15,27 +15,61 @@ EVT_MENU(10005, MainWindow::SettingsButton)
 EVT_MENU(10006, MainWindow::SaveGame)
 EVT_MENU(10007, MainWindow::Default)
 EVT_MENU(10008, MainWindow::NeighborCheck)
+EVT_MENU(10009, MainWindow::OnRandomize)
+EVT_MENU(10010, MainWindow::OnRandomizeWithSeed)
 wxEND_EVENT_TABLE()
 
 // Definition of the MainWindow constructor
 MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Game of Life", wxPoint(0, 0), wxSize(800, 600)), Gen(0), livCells(0){ // Initialize the base wxFrame class with position and size
     
     setting.LoadingData();
+    
     view = new wxMenu();
-    mainBar = new wxMenuBar;
+    
+    randomizer = new wxMenu();
+    
+    mainBar = new wxMenuBar();
+    
     settingsBar = new wxMenu();
+    
     saveBar = new wxMenu();
+    
     defaultBar = new wxMenu();
-    item = new wxMenuItem(view, wxID_ANY, "Neighbor Count", wxEmptyString, wxITEM_CHECK);
-    item->SetCheckable(true);
-    view->Append(item);
+    
+    neighborcount = new wxMenuItem(view, 10008, "Neighbor Count", wxEmptyString, wxITEM_CHECK);
+    
+    Randomize = new wxMenuItem(randomizer, 10009, "Randomize(time)", wxEmptyString, wxITEM_CHECK);
+    
+    RandSeed = new wxMenuItem(randomizer, 10010, "Randomize(seed)", wxEmptyString, wxITEM_CHECK);
+    
+    Randomize->SetCheckable(true);
+    
+    RandSeed->SetCheckable(true);
+    
+    neighborcount->SetCheckable(true);
+    
+    randomizer->Append(Randomize);
+    
+    randomizer->Append(RandSeed);
+    
+    view->Append(neighborcount);
+    
     settingsBar->Append(10005, "Settings");
+    
     saveBar->Append(10006, "Save Game");
+    
     defaultBar->Append(10007, "Default Settings");
+    
     mainBar->Append(settingsBar, "Settings");
+    
     mainBar->Append(saveBar, "Save Game");
+    
     mainBar->Append(defaultBar, "Default Settings");
-    mainBar->Append(view, "Items");
+    
+    mainBar->Append(view, "View");
+    
+    mainBar->Append(randomizer, "Randomizer");
+    
     SetMenuBar(mainBar);
 
     
@@ -215,6 +249,39 @@ void MainWindow::Default(wxCommandEvent& event)
 void MainWindow::NeighborCheck(wxCommandEvent& event)
 {
     setting.neighbor = event.IsChecked();
+}
+
+void MainWindow::OnRandomize(wxCommandEvent& event)
+{
+    int seed = time(NULL);
+    RandomizeGrid(seed);
+}
+
+void MainWindow::OnRandomizeWithSeed(wxCommandEvent& event)
+{
+    int seed = wxGetNumberFromUser("Enter Seed", "Seed: ", "Randomize with seed", 0, 0, LONG_MAX, this);
+    RandomizeGrid(seed);
+}
+
+void MainWindow::RandomizeGrid(int seed)
+{
+    srand(seed);
+
+    for (size_t i = 0; i < setting.gridSize; ++i)
+    {
+        for (size_t j = 0; j < setting.gridSize; ++j)
+        {
+            if (rand() % 2 == 0)
+            {
+                gameBoard[i][j] = true;
+            }
+            else
+            {
+                gameBoard[i][j] = false;
+            }
+        }
+    }
+    Refresh();
 }
 
 // counting the number of living cells around a cell

@@ -68,7 +68,6 @@ void DrawingPanel::OnPaint(wxPaintEvent& event)
         return; 
     }
 
-    context->SetFont(wxFontInfo(16), *wxRED);
     // Set the pen color to black for drawing outlines
     context->SetPen(*wxBLACK);
 
@@ -84,13 +83,14 @@ void DrawingPanel::OnPaint(wxPaintEvent& event)
             int neighbors = window->NeighborCounter(row, col);
             if (neighbors > 0 && settings->neighbor)
             {
+                context->SetFont(wxFontInfo(16), *wxRED);
                 wxString neighborCount = wxString::Format("%d", neighbors);
                 double width, heigh;
                 context->GetTextExtent(neighborCount, &width, &heigh);
-                int x = row * cellWidth + (cellWidth - width);
-                int y = col * cellHeight + (cellHeight - heigh);
+                int x = row * cellWidth + (cellWidth - width) /2;
+                int y = col * cellHeight + (cellHeight - heigh) /2;
                 context->DrawText(neighborCount, x, y);
-
+                this->Refresh();
             }
             
             // x is col times cellwidth
