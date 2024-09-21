@@ -47,6 +47,8 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Game of Life", wxPoint(0,
     GridInitializtion();
 
     this->Layout();
+    ui = new Dialog_UI(this, &setting);
+    ui->ShowModal();
 }
 
 // Definition of the MainWindow destructor

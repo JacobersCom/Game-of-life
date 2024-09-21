@@ -1,9 +1,10 @@
 #pragma once
 #include "wx/wx.h"
+#include "wx/spinctrl.h"
 
 struct gameSetting {
 public:
-	int gridSize = 30;
+	int gridSize = 15;
 	int time = 50; 
 	
 	unsigned int Red = 128;
@@ -33,6 +34,8 @@ public:
 		wxColor color(redDead, greenDead, blueDead, alphaDead);
 		return color;
 	}
+
+	
 
 	int GetGridSize() {
 		

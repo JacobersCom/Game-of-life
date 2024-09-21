@@ -4,6 +4,7 @@
 #include"MainWindow.h"
 #include "wx/wx.h"
 #include <vector>
+
 class MainWindow;
 class App;
 struct gameSetting;

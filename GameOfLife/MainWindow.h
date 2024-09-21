@@ -5,9 +5,11 @@
 #include "DrawingPanel.h"
 #include <vector>
 #include "GameSettings.h"
+#include "Dialog_UI.h"
 
 class DrawingPanel;
 struct gameSetting;
+class Dialog_UI;
 
 // Declaration of the MainWindow class, inheriting from wxFrame
 class MainWindow : public wxFrame {
@@ -61,6 +63,7 @@ private:
     wxToolBar* toolBar;
     wxTimer* timer;
     gameSetting setting;
+    Dialog_UI* ui;
 };
 
 #endif // MAINWINDOW_H

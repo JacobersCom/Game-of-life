@@ -132,11 +132,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
+    <ClCompile Include="Dialog_UI.cpp" />
     <ClCompile Include="DrawingPanel.cpp" />
     <ClCompile Include="MainWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h" />
+    <ClInclude Include="Dialog_UI.h" />
     <ClInclude Include="DrawingPanel.h" />
     <ClInclude Include="GameSettings.h" />
     <ClInclude Include="MainWindow.h" />
@@ -144,6 +146,9 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="GameOfLife.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

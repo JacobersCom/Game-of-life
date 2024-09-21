@@ -28,12 +28,19 @@ void DrawingPanel::Cell()
     int gridSize = gameSettings->GetGridSize();
     // Grabing the Window size to access the Get width and heigh methods
     wxSize panel = this->GetClientSize();
+    if (gridSize == NULL)
+    {
+        
+    }
+    else
+    {
 
-    // Taking get width and dividing it by the grid size (15)
-    cellWidth = (panel.GetWidth() / gridSize);
+        cellWidth = (panel.GetWidth() / gridSize);
 
-    // Taking get height and dividing it by the grid size (15)
-    cellHeight = (panel.GetHeight() / gridSize);
+        // Taking get height and dividing it by the grid size (15)
+        cellHeight = (panel.GetHeight() / gridSize);
+    }
+        // Taking get width and dividing it by the grid size (15)
 }
 
 // Definition of the OnPaint method, which handles paint events
