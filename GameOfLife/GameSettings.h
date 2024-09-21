@@ -1,11 +1,13 @@
 #pragma once
 #include "wx/wx.h"
 #include "wx/spinctrl.h"
-
+#include <iostream>
+#include <fstream>
 struct gameSetting {
 public:
 	int gridSize = 15;
-	int time = 50; 
+	int time; 
+	bool neighbor;
 	
 	unsigned int Red = 128;
 	unsigned int Green = 128;
@@ -34,11 +36,34 @@ public:
 		wxColor color(redDead, greenDead, blueDead, alphaDead);
 		return color;
 	}
-
-	
-
-	int GetGridSize() {
+	void SetGridSize(int newgrid)
+	{
+		gridSize = newgrid;
+	}
+	int GetGridSize() const {
 		
 		return gridSize;
+	}
+	int GetInterval() const {
+		
+		return time;
+	}
+	void LoadingData()
+	{
+		std::ifstream file("Save.bin", std::ios::binary | std::ios::in);
+		if (file.is_open())
+		{
+			file.read((char*)this, sizeof(gameSetting));
+		}
+			file.close();
+	}
+	void SaveData()
+	{
+		std::ofstream file("Save.bin", std::ios::binary | std::ios::out);
+		if (file.is_open())
+		{
+			file.write((char*)this, sizeof(gameSetting));
+		}
+			file.close();
 	}
 };

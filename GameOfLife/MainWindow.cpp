@@ -12,16 +12,32 @@ EVT_MENU(10002, TrashButton)
 EVT_MENU(10003, NextButton)
 EVT_TIMER(10004, MainWindow::Timer)
 EVT_MENU(10005, MainWindow::SettingsButton)
+EVT_MENU(10006, MainWindow::SaveGame)
+EVT_MENU(10007, MainWindow::Default)
+EVT_MENU(10008, MainWindow::NeighborCheck)
 wxEND_EVENT_TABLE()
 
 // Definition of the MainWindow constructor
 MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Game of Life", wxPoint(0, 0), wxSize(800, 600)), Gen(0), livCells(0){ // Initialize the base wxFrame class with position and size
-   
+    
+    setting.LoadingData();
+    view = new wxMenu();
     mainBar = new wxMenuBar;
     settingsBar = new wxMenu();
+    saveBar = new wxMenu();
+    defaultBar = new wxMenu();
+    item = new wxMenuItem(view, wxID_ANY, "Neighbor Count", wxEmptyString, wxITEM_CHECK);
+    item->SetCheckable(true);
+    view->Append(item);
     settingsBar->Append(10005, "Settings");
+    saveBar->Append(10006, "Save Game");
+    defaultBar->Append(10007, "Default Settings");
     mainBar->Append(settingsBar, "Settings");
+    mainBar->Append(saveBar, "Save Game");
+    mainBar->Append(defaultBar, "Default Settings");
+    mainBar->Append(view, "Items");
     SetMenuBar(mainBar);
+
     
     // Creating my status bar
     statusBar = CreateStatusBar();
@@ -34,16 +50,12 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Game of Life", wxPoint(0,
 
     //Initialzing the wxTimer pointer
     timer = new wxTimer(this, 10004);
-
-    //Bitmap for the playerIcon that takes the C style char array
-    wxBitmap playicon(play_xpm);
+   
     //A helper method that takes a int string and wxBitmap and adds the Play button to the tool bar
+    wxBitmapBundle playicon(play_xpm) ,pauseicon(pause_xpm), trashicon(trash_xpm), nexticon(next_xpm);
     addToolFields(10000, "Play", playicon);
-    wxBitmap pauseicon(pause_xpm);
     addToolFields(10001, "Pause", pauseicon);;
-    wxBitmap trashicon(trash_xpm);
     addToolFields(10002, "Trash", trashicon);
-    wxBitmap nexticon(next_xpm);
     addToolFields(10003, "Next", nexticon);
 
     //Used to finalizes the placement of the tool bar 
@@ -55,7 +67,8 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Game of Life", wxPoint(0,
 
     this->Layout();
     ui = new Dialog_UI(this, &setting);
-    ui->ShowModal();
+   
+
 }
 
 // Definition of the MainWindow destructor
@@ -64,6 +77,7 @@ MainWindow::~MainWindow() {
     //Clean up;
     delete drawing;
     delete timer;
+    
 }
 
 void MainWindow::ReSize(wxSizeEvent& event)
@@ -83,7 +97,7 @@ void MainWindow::ReSize(wxSizeEvent& event)
 
     // Allows another functions to handle the event
     event.Skip(); 
-
+    
 }
 
 // Initializing the grid 
@@ -93,16 +107,24 @@ void MainWindow::GridInitializtion()
     wxSize size = this->GetClientSize();
     
     // Making the vector the same size as the grid(15)
-    gameBoard.resize(setting.gridSize);
+    neighbor.resize(setting.gridSize);
+    for (size_t i = 0; i < neighbor.size(); i++)
+    {
+        neighbor[i].resize(setting.gridSize, 0);
+    }
+
 
     //resizing the vectors inside the vector
+    gameBoard.resize(setting.gridSize);
     for (size_t i = 0; i < gameBoard.size(); i++)
     {
         gameBoard[i].resize(setting.gridSize);
+        neighbor[i].resize(setting.gridSize, 0);
     }
 
     //Calling the set grid size from drawing panel and passing in the gridsize 
     drawing->SetGridSize(setting.gridSize);
+   
 }
 
 //Setting the status bar
@@ -111,6 +133,7 @@ void MainWindow::StatusBarText()
 
     std::string bar = "   \t\t\t\t\t\t\t\t\t\t\t\t\tGeneration: " + std::to_string(Gen) + "\t\t\t\t|\t\t\t\t" + std::to_string(livCells) + " :Living";
     statusBar->SetStatusText(bar);
+    
 }
 
 //When play is clicked a timer will start. Time is = to 50
@@ -161,8 +184,9 @@ void MainWindow::NextButton(wxCommandEvent& event)
 
 void MainWindow::SettingsButton(wxCommandEvent& event)
 {
-    ui->ShowModal();
-    if (wxOK)
+    ui = new Dialog_UI(this, &setting);
+    
+    if (ui->ShowModal() == wxOK)
     {
         GridInitializtion();
         drawing->Refresh();
@@ -171,6 +195,26 @@ void MainWindow::SettingsButton(wxCommandEvent& event)
     {
         return;
     }
+}
+
+void MainWindow::SaveGame(wxCommandEvent& event)
+{
+    setting.SaveData();
+}
+
+void MainWindow::Default(wxCommandEvent& event)
+{
+    setting.SetGridSize(15);
+    GridInitializtion();
+    setting.setColor(color);
+    whiteColor = *wxWHITE;
+    setting.SetDeadColor(whiteColor);
+    
+}
+
+void MainWindow::NeighborCheck(wxCommandEvent& event)
+{
+    setting.neighbor = event.IsChecked();
 }
 
 // counting the number of living cells around a cell
@@ -287,7 +331,7 @@ void MainWindow::Timer(wxTimerEvent& event)
 }
 
 //Helper method for adding the right arugments to the Addtool method
-void MainWindow::addToolFields(int ID, std::string name, wxBitmap icon)
+void MainWindow::addToolFields(int ID, std::string name, wxBitmapBundle icon)
 {
     toolBar->AddTool(ID, name, icon);
 }
@@ -300,6 +344,7 @@ void MainWindow::UpdateStatusBar(int alive)
    
     // updating the test for the bar
     StatusBarText();
+    
 }
 
 

@@ -31,8 +31,8 @@ private:
     std::vector<std::vector<bool>>& drawingBoard;
     int cellHeight;
     int cellWidth;
-    MainWindow* mainWindow;
-    gameSetting* gameSettings;
+    MainWindow* window;
+    gameSetting* settings;
     
 
     // Finds where the mouse is locatied 

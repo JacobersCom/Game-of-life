@@ -13,6 +13,7 @@ public:
 	~Dialog_UI();
 	void okButtomClicked(wxCommandEvent& event);
 	void cancelButtomClicked(wxCommandEvent& event);
+	
 
 	wxDECLARE_EVENT_TABLE();
 

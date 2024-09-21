@@ -39,6 +39,9 @@ public:
   void PauseButton(wxCommandEvent& event);
   void NextButton(wxCommandEvent& event);
   void SettingsButton(wxCommandEvent& event);
+  void SaveGame(wxCommandEvent& event);
+  void Default(wxCommandEvent& event);
+  void NeighborCheck(wxCommandEvent& event);
 
   //Calulating the amount of people around to see if the gen will live or die
   int NeighborCounter(int row, int col);
@@ -50,7 +53,7 @@ public:
   void Timer(wxTimerEvent& event);
 
   //Helper method for my tool bar
-  void addToolFields(int ID, std::string name, wxBitmap icon);
+  void addToolFields(int ID, std::string name, wxBitmapBundle icon);
 
   //Event table declaration 
   wxDECLARE_EVENT_TABLE();
@@ -58,6 +61,7 @@ public:
 
 private:
     DrawingPanel* drawing; 
+    std::vector<std::vector<int>> neighbor;
     std::vector<std::vector<bool>> gameBoard;
     int Gen; 
     int livCells; 
@@ -65,9 +69,16 @@ private:
     wxToolBar* toolBar;
     wxTimer* timer;
     wxMenu* settingsBar;
+    wxMenu* saveBar;
+    wxMenu* defaultBar;
+    wxMenu* view;
     wxMenuBar* mainBar;
+    wxMenuItem* item;
     gameSetting setting;
     Dialog_UI* ui;
+    wxColor color;
+    wxColor whiteColor;
+
     
 };
 
