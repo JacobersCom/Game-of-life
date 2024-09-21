@@ -11,11 +11,18 @@ EVT_MENU(10001, PauseButton)
 EVT_MENU(10002, TrashButton)
 EVT_MENU(10003, NextButton)
 EVT_TIMER(10004, MainWindow::Timer)
+EVT_MENU(10005, MainWindow::SettingsButton)
 wxEND_EVENT_TABLE()
 
 // Definition of the MainWindow constructor
 MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Game of Life", wxPoint(0, 0), wxSize(800, 600)), Gen(0), livCells(0){ // Initialize the base wxFrame class with position and size
    
+    mainBar = new wxMenuBar;
+    settingsBar = new wxMenu();
+    settingsBar->Append(10005, "Settings");
+    mainBar->Append(settingsBar, "Settings");
+    SetMenuBar(mainBar);
+    
     // Creating my status bar
     statusBar = CreateStatusBar();
     
@@ -150,6 +157,20 @@ void MainWindow::PauseButton(wxCommandEvent& event)
 void MainWindow::NextButton(wxCommandEvent& event)
 {
     NextGen();
+}
+
+void MainWindow::SettingsButton(wxCommandEvent& event)
+{
+    ui->ShowModal();
+    if (wxOK)
+    {
+        GridInitializtion();
+        drawing->Refresh();
+    }
+    else if (wxCANCEL)
+    {
+        return;
+    }
 }
 
 // counting the number of living cells around a cell

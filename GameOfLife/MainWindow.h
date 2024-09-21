@@ -3,9 +3,10 @@
 
 #include "wx/wx.h"
 #include "DrawingPanel.h"
-#include <vector>
-#include "GameSettings.h"
 #include "Dialog_UI.h"
+#include "GameSettings.h"
+#include <vector>
+
 
 class DrawingPanel;
 struct gameSetting;
@@ -37,6 +38,7 @@ public:
   void TrashButton(wxCommandEvent& event);
   void PauseButton(wxCommandEvent& event);
   void NextButton(wxCommandEvent& event);
+  void SettingsButton(wxCommandEvent& event);
 
   //Calulating the amount of people around to see if the gen will live or die
   int NeighborCounter(int row, int col);
@@ -62,8 +64,11 @@ private:
     wxStatusBar* statusBar;
     wxToolBar* toolBar;
     wxTimer* timer;
+    wxMenu* settingsBar;
+    wxMenuBar* mainBar;
     gameSetting setting;
     Dialog_UI* ui;
+    
 };
 
 #endif // MAINWINDOW_H

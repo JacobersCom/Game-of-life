@@ -21,7 +21,7 @@ Dialog_UI::Dialog_UI(wxWindow* parent, gameSetting* settings) :wxDialog(parent, 
 	aliveColorLabel = new wxStaticText(this, wxID_ANY, "Alive Color");
 	deadColor = new wxColourPickerCtrl(this, 10003, setting->GetDeadColor());
 	deadColorLabel = new wxStaticText(this, wxID_ANY, "Dead Color");
-	sizer = (CreateButtonSizer(wxOK | wxCANCEL));
+	Button = (CreateButtonSizer(wxOK | wxCANCEL));
 	
 	mainBox->Add(gridBox);
 	mainBox->Add(gridSizeLabel, 0, wxLEFT, 3);
@@ -33,7 +33,7 @@ Dialog_UI::Dialog_UI(wxWindow* parent, gameSetting* settings) :wxDialog(parent, 
 	mainBox->Add(aliveColor, 0, wxALL, 3);
 	mainBox->Add(deadColorLabel, 0, wxLEFT, 3);
 	mainBox->Add(deadColor, 0, wxALL, 3);
-	mainBox->Add(sizer, 0, wxUP, 3);
+	mainBox->Add(Button, 0, wxUP, 3);
 }
 
 Dialog_UI::~Dialog_UI()

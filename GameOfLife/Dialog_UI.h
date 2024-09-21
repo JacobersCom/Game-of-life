@@ -30,6 +30,7 @@ private:
 	wxSpinCtrl* intervalSpin;
 	wxColourPickerCtrl* aliveColor;
 	wxColourPickerCtrl* deadColor;
-	wxSizer* sizer; 
+	wxSizer* Button; 
+	
 };
 
