@@ -11,11 +11,13 @@ Dialog_UI::Dialog_UI(wxWindow* parent, gameSetting* settings) :wxDialog(parent, 
 
 	gridBox = new wxBoxSizer(wxVERTICAL);
 	gridSizeLabel = new wxStaticText(this, wxID_ANY, "Grid Size");
-	gridSizeSpin = new wxSpinCtrl(this, 10001, "gridSize", wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100, 15);
+	gridSizeSpin = new wxSpinCtrl(this, 10001, "gridSize", wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100);
+	gridSizeSpin->SetValue(setting->GetGridSize());
 
 	intervalBox = new wxBoxSizer(wxHORIZONTAL);
 	intervalLabel = new wxStaticText(this, wxID_ANY, "Time Interval");
 	intervalSpin = new wxSpinCtrl(this, 10002);
+	intervalSpin->SetValue(setting->GetInterval());
 	
 	aliveColor = new wxColourPickerCtrl(this, 10002, setting->GetColor());
 	aliveColorLabel = new wxStaticText(this, wxID_ANY, "Alive Cell Color");
@@ -46,8 +48,8 @@ void Dialog_UI::okButtomClicked(wxCommandEvent& event)
 
 	if (wxOK)
 	{
-		setting->gridSize = gridSizeSpin->GetValue();
-		setting->time = intervalSpin->GetValue();
+		setting->SetGridSize(gridSizeSpin->GetValue());
+		setting->SetInterval(intervalSpin->GetValue());
 		setting->setColor(aliveColor->GetColour());
 		setting->SetDeadColor(deadColor->GetColour());
 		EndModal(wxOK);

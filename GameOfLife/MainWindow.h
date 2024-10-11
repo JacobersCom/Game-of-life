@@ -8,6 +8,7 @@
 #include <vector>
 #include <cstdlib>
 #include "wx/numdlg.h"
+#include  "wx/filedlg.h"
 
 
 class DrawingPanel;
@@ -41,13 +42,15 @@ public:
   void PauseButton(wxCommandEvent& event);
   void NextButton(wxCommandEvent& event);
   void SettingsButton(wxCommandEvent& event);
-  void SaveGame(wxCommandEvent& event);
-  void Default(wxCommandEvent& event);
+  void SaveGameButton(wxCommandEvent& event);
+  void DefaultButton(wxCommandEvent& event);
   void NeighborCheck(wxCommandEvent& event);
   void OnRandomize(wxCommandEvent& event);
   void OnRandomizeWithSeed(wxCommandEvent& event);
   void RandomizeGrid(int seed);
-
+  void OpenFileButton(wxCommandEvent& event);
+  void ExitButton(wxCommandEvent& event);
+  void SaveAsButton(wxCommandEvent& event);
   //Calulating the amount of people around to see if the gen will live or die
   int NeighborCounter(int row, int col);
 
@@ -65,24 +68,41 @@ public:
 
 
 private:
-    DrawingPanel* drawing; 
     std::vector<std::vector<int>> neighbor;
     std::vector<std::vector<bool>> gameBoard;
+    
     int Gen; 
     int livCells; 
-    wxStatusBar* statusBar;
-    wxToolBar* toolBar;
-    wxTimer* timer;
-    wxMenu* settingsBar;
-    wxMenu* saveBar;
-    wxMenu* defaultBar;
-    wxMenu* view;
-    wxMenu* randomizer;
+    
     wxMenuBar* mainBar;
+    
+    wxMenu* fileMenu;
+    wxMenuItem* New;
+    wxMenuItem* Open;
+    wxMenuItem* Save;
+    wxMenuItem* saveAs;
+    wxMenuItem* Exit;
+    
+    wxMenu* view;
     wxMenuItem* neighborcount;
-    wxMenuItem* Randomize;
+    
+    wxMenu* randomizer;
     wxMenuItem* RandSeed;
+    wxMenuItem* Randomize;
+    
+    wxStatusBar* statusBar;
+    
+    wxToolBar* toolBar;
+    
+    wxTimer* timer;
+    
+    wxMenu* optionsBar;
+    wxMenuItem* defaultBar;
+  
+   
+    
     gameSetting setting;
+    DrawingPanel* drawing; 
     Dialog_UI* ui;
 
     wxColor color;

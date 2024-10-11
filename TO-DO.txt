@@ -1,0 +1,8 @@
+Fix save and open
+
+Open - have it work with any grid size. When you opena 30 by 30 grid it should resize to that gridsize
+Save - needs to save to a pre living file and if that file doesnt exist act as save as. 
+Grid lines
+Add differe icons for play and etc
+Add a save, new, and open icon instead of it living in the files menu bar
+

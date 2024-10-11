@@ -12,11 +12,14 @@ EVT_MENU(10002, TrashButton)
 EVT_MENU(10003, NextButton)
 EVT_TIMER(10004, MainWindow::Timer)
 EVT_MENU(10005, MainWindow::SettingsButton)
-EVT_MENU(10006, MainWindow::SaveGame)
-EVT_MENU(10007, MainWindow::Default)
+EVT_MENU(10006, MainWindow::SaveGameButton)
+EVT_MENU(10007, MainWindow::DefaultButton)
 EVT_MENU(10008, MainWindow::NeighborCheck)
 EVT_MENU(10009, MainWindow::OnRandomize)
 EVT_MENU(10010, MainWindow::OnRandomizeWithSeed)
+EVT_MENU(10015, MainWindow::ExitButton)
+EVT_MENU(wxID_OPEN, MainWindow::OpenFileButton)
+EVT_MENU(10014, MainWindow::SaveAsButton)
 wxEND_EVENT_TABLE()
 
 // Definition of the MainWindow constructor
@@ -24,54 +27,46 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Game of Life", wxPoint(0,
     
     setting.LoadingData();
     
-    view = new wxMenu();
-    
-    randomizer = new wxMenu();
-    
     mainBar = new wxMenuBar();
     
-    settingsBar = new wxMenu();
+    fileMenu = new wxMenu();
     
-    saveBar = new wxMenu();
-    
-    defaultBar = new wxMenu();
-    
+    // Redo with wxprebuild IDs EX:: wxID_SAVE
+    New = new wxMenuItem(fileMenu, 10011, "New file", wxEmptyString);
+    Open = new wxMenuItem(fileMenu, wxID_OPEN, "Open file", wxEmptyString);
+    Save = new wxMenuItem(fileMenu, 10006, "Save", wxEmptyString);
+    saveAs = new wxMenuItem(fileMenu, 10014, "Save As", wxEmptyString);
+    Exit = new wxMenuItem(fileMenu, 10015, "Exit", wxEmptyString);
+    fileMenu->Append(New);
+    fileMenu->Append(Open);
+    fileMenu->Append(Save);
+    fileMenu->Append(saveAs);
+    fileMenu->Append(Exit);
+    mainBar->Append(fileMenu, "File");
+
+    view = new wxMenu();
     neighborcount = new wxMenuItem(view, 10008, "Neighbor Count", wxEmptyString, wxITEM_CHECK);
-    
-    Randomize = new wxMenuItem(randomizer, 10009, "Randomize(time)", wxEmptyString, wxITEM_CHECK);
-    
-    RandSeed = new wxMenuItem(randomizer, 10010, "Randomize(seed)", wxEmptyString, wxITEM_CHECK);
-    
-    Randomize->SetCheckable(true);
-    
-    RandSeed->SetCheckable(true);
-    
+    view->Append(neighborcount);
+    mainBar->Append(view, "View");
     neighborcount->SetCheckable(true);
     
+    randomizer = new wxMenu();
+    Randomize = new wxMenuItem(randomizer, 10009, "Randomize(time)", wxEmptyString, wxITEM_CHECK);
+    RandSeed = new wxMenuItem(randomizer, 10010, "Randomize(seed)", wxEmptyString, wxITEM_CHECK);
+    Randomize->SetCheckable(true);
+    RandSeed->SetCheckable(true);
     randomizer->Append(Randomize);
-    
     randomizer->Append(RandSeed);
-    
-    view->Append(neighborcount);
-    
-    settingsBar->Append(10005, "Settings");
-    
-    saveBar->Append(10006, "Save Game");
-    
-    defaultBar->Append(10007, "Default Settings");
-    
-    mainBar->Append(settingsBar, "Settings");
-    
-    mainBar->Append(saveBar, "Save Game");
-    
-    mainBar->Append(defaultBar, "Default Settings");
-    
-    mainBar->Append(view, "View");
-    
     mainBar->Append(randomizer, "Randomizer");
     
+    
+    optionsBar = new wxMenu();
+    optionsBar->Append(10005, "Settings");
+    defaultBar = new wxMenuItem(optionsBar, 10007, "Default Settings", wxEmptyString);
+    optionsBar->Append(defaultBar);
+    mainBar->Append(optionsBar, "Options");
+    
     SetMenuBar(mainBar);
-
     
     // Creating my status bar
     statusBar = CreateStatusBar();
@@ -97,6 +92,8 @@ MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Game of Life", wxPoint(0,
 
     // Initialize the DrawingPanel with "this" as the parent
     drawing = new DrawingPanel(this, gameBoard, &setting); 
+
+   
     GridInitializtion();
 
     this->Layout();
@@ -111,6 +108,7 @@ MainWindow::~MainWindow() {
     //Clean up;
     delete drawing;
     delete timer;
+    
     
 }
 
@@ -134,11 +132,10 @@ void MainWindow::ReSize(wxSizeEvent& event)
     
 }
 
-// Initializing the grid 
 void MainWindow::GridInitializtion()
 {
     // Getting the ClientSize
-    wxSize size = this->GetClientSize();
+    /*wxSize size = this->GetClientSize();*/
     
     // Making the vector the same size as the grid(15)
     neighbor.resize(setting.gridSize);
@@ -153,15 +150,15 @@ void MainWindow::GridInitializtion()
     for (size_t i = 0; i < gameBoard.size(); i++)
     {
         gameBoard[i].resize(setting.gridSize);
-        neighbor[i].resize(setting.gridSize, 0);
+       
     }
 
     //Calling the set grid size from drawing panel and passing in the gridsize 
-    drawing->SetGridSize(setting.gridSize);
+   /* drawing->SetGridSize(setting.gridSize);*/
    
 }
 
-//Setting the status bar
+
 void MainWindow::StatusBarText()
 {
 
@@ -169,26 +166,39 @@ void MainWindow::StatusBarText()
     statusBar->SetStatusText(bar);
     
 }
+void MainWindow::UpdateStatusBar(int alive)
+{  
+    //Adding the alive cells to livcells
+    livCells += alive;
+   
+    // updating the test for the bar
+    StatusBarText();
+    
+}
 
-//When play is clicked a timer will start. Time is = to 50
 void MainWindow::PlayButton(wxCommandEvent& event)
 {
     //timer is pointer of wxtime pointer to the start method to start a timer for 50 milisecs
     timer->Start(setting.time);
 }
-
-// Clearing the screen
 void MainWindow::TrashButton(wxCommandEvent& event)
 {
     // Nested for loop resetting the vector of vectors to false
-    for (int i = 0; i < gameBoard.size(); i++)
+   /* for (int i = 0; i < gameBoard.size(); i++)
     {
         for (int j = 0; j < gameBoard.size(); j++)
         {
             gameBoard[i][j] = false;
         }
-    }
+    }*/
 
+    for (auto& row : gameBoard) {
+        for (auto& col : gameBoard) {
+            std::fill(row.begin(), row.end(), false);
+            std::fill(col.begin(), col.end(), false);
+        }
+    }
+    
     // setting Gen and LivCells back to 0
     Gen = 0;
     livCells = 0;
@@ -202,20 +212,15 @@ void MainWindow::TrashButton(wxCommandEvent& event)
     //Refreshing the drawingpanel
     Refresh();
 }
-
-//Pausing the play method
 void MainWindow::PauseButton(wxCommandEvent& event)
 {
     //Stops timer in play method
     timer->Stop();
 }
-
-//Class NextGen method to move to the next gen
 void MainWindow::NextButton(wxCommandEvent& event)
 {
     NextGen();
 }
-
 void MainWindow::SettingsButton(wxCommandEvent& event)
 {
     ui = new Dialog_UI(this, &setting);
@@ -230,39 +235,35 @@ void MainWindow::SettingsButton(wxCommandEvent& event)
         return;
     }
 }
-
-void MainWindow::SaveGame(wxCommandEvent& event)
+void MainWindow::DefaultButton(wxCommandEvent& event)
 {
-    setting.SaveData();
-}
-
-void MainWindow::Default(wxCommandEvent& event)
-{
-    setting.SetGridSize(15);
     GridInitializtion();
+    setting.SetGridSize(15);
+    setting.SetInterval(5);
+    color = *wxLIGHT_GREY;
     setting.setColor(color);
     whiteColor = *wxWHITE;
     setting.SetDeadColor(whiteColor);
+    setting.neighbor = false;
+    neighborcount->Check(setting.neighbor);
     
 }
-
 void MainWindow::NeighborCheck(wxCommandEvent& event)
 {
-    setting.neighbor = event.IsChecked();
+    setting.neighbor = !setting.neighbor;
+    neighborcount->Check(setting.neighbor);
+    drawing->Refresh();
 }
-
 void MainWindow::OnRandomize(wxCommandEvent& event)
 {
     int seed = time(NULL);
     RandomizeGrid(seed);
 }
-
 void MainWindow::OnRandomizeWithSeed(wxCommandEvent& event)
 {
     int seed = wxGetNumberFromUser("Enter Seed", "Seed: ", "Randomize with seed", 0, 0, LONG_MAX, this);
     RandomizeGrid(seed);
 }
-
 void MainWindow::RandomizeGrid(int seed)
 {
     srand(seed);
@@ -283,17 +284,118 @@ void MainWindow::RandomizeGrid(int seed)
     }
     Refresh();
 }
+void MainWindow::SaveGameButton(wxCommandEvent& event)
+{
+    //Make it default to downloads
+    wxFileDialog fileDialog(this, "Save Game of Life file", "", "", "Game of life files(*. cells) | *.cells", wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+   
+    std::ofstream file("Game of life files(*. cells) | *.cells");
+    if (file.is_open())
+    {
+        file.write((char*)this, sizeof(gameBoard.size()));
+    }
+    file.close();
+}
 
-// counting the number of living cells around a cell
+void MainWindow::OpenFileButton(wxCommandEvent& event)
+{
+    wxFileDialog open(this, _("Open file"), wxEmptyString, wxEmptyString, "Files (*.cells) | *.cells", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+
+    if (open.ShowModal() == wxID_CANCEL)
+    {
+        return;
+    }
+
+
+    std::string buffer;
+    std::ifstream file;
+    int index = 0;
+
+    file.open((std::string)open.GetPath());
+    if (!file.is_open())
+    {
+        wxMessageBox("nope", "error");
+        return;   
+    }
+
+    gameBoard.clear();
+    std::vector<std::vector<bool>> temp;
+
+    while (std::getline(file,buffer))
+    {
+        if (buffer.empty()) 
+        {
+            break;
+        }
+        
+        temp.push_back(std::vector<bool>(buffer.size(), false));
+        
+        for (int i = 0; i < buffer.size(); i++)
+        {
+            if (buffer[i] == '*')
+            {
+                temp[index][i] = true;
+            }
+           
+        }
+        index++;
+    }
+    file.close();
+   
+    gameBoard = std::move(temp);
+    UpdateStatusBar(livCells);
+    drawing->Refresh();
+
+    event.Skip();
+}
+
+void MainWindow::ExitButton(wxCommandEvent& event)
+{
+    Close(true);
+}
+
+void MainWindow::SaveAsButton(wxCommandEvent& event)
+{
+    wxFileDialog fileDialog(this, "Save Game of Life file", "", "", "Game of life files(*.cells) | *.cells", wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+    if (fileDialog.ShowModal() == wxID_CANCEL) {
+        return;
+    }
+    std::ofstream fileStream;
+    //GetFile name returns a wxString. So we cast the file name as a string
+    fileStream.open((std::string)fileDialog.GetPath());
+    if (fileStream.is_open())
+    {
+        for (size_t i = 0; i < gameBoard.size(); i++)
+        {
+            for (size_t j = 0; j < gameBoard[i].size(); j++)
+            {
+                if (gameBoard[i][j])
+                {
+                    fileStream << '*';
+                }
+                else
+                {
+                    fileStream << '.';
+                }
+            }
+            fileStream << "\n";
+        }
+
+        fileStream.close();
+    }
+    event.Skip();
+}
+
 int MainWindow::NeighborCounter(int row, int col)
 {
     //Int varaible used to repersent the living cell count
     int Livecount = 0;
+    
 
     // A nexted for loop that covers a 3x3 grid  and checks if either is 0 if so wwe continue as we only want to count the neighbors
-    for (int i = -1; i <= 1; ++i)
+    for (int i = -1; i <= 1; i++)
     {
-        for (int j = -1; j <= 1; ++j)
+        for (int j = -1; j <= 1; j++)
         {
             if (i == 0 && j == 0)
             {
@@ -308,9 +410,9 @@ int MainWindow::NeighborCounter(int row, int col)
             if (mRow >= 0 && mRow < setting.gridSize && mCol >= 0 && mCol < setting.gridSize)
             {
                 //if game board is == to true add to the live count 
-                if (gameBoard[mRow][mCol] == true)
+                if (gameBoard[mRow][mCol])
                 {
-                    Livecount += 1;
+                    Livecount++;
                 }
             }
         }
@@ -319,21 +421,10 @@ int MainWindow::NeighborCounter(int row, int col)
     //return the live count
     return Livecount;
 }
-
-// Handles advancing the game of life generation
 void MainWindow::NextGen()
 {
-    //varaible vector 
-    std::vector<std::vector<bool>> sandbox;
-
-    // resizing the vector and the vector's vectors to the grid size
-    sandbox.resize(setting.gridSize);
-    for (int i = 0; i < sandbox.size(); i++)
-    {
-        sandbox[i].resize(setting.gridSize);
-    }
-    
-    //Setting Living cells to 0
+    GridInitializtion();
+ 
     livCells = 0;
 
     // A nested for loop counting till the size of the grid (15)
@@ -342,6 +433,7 @@ void MainWindow::NextGen()
         for (int col = 0; col < setting.gridSize; ++col)
         {
             // Calling NeighborCounter and passing in our iterators to determine how many of the cells neighbors are alive and storing it in a varaible called neighbors
+            GridInitializtion();
             int neighbors = NeighborCounter(row, col);
             
             //Game of life rules 
@@ -350,12 +442,12 @@ void MainWindow::NextGen()
                 // if neighbor count is less than 2 and greater than 3 sandBox is set to false
                 if (neighbors < 2 || neighbors > 3)
                 {
-                    sandbox[row][col] = false;
+                    gameBoard[row][col] = false;
 
                 }
                 else // else set the sandbox = to true and add to the living cell count
                 {
-                    sandbox[row][col] = true;
+                    gameBoard[row][col] = true;
                     ++livCells;
 
                 }
@@ -363,18 +455,16 @@ void MainWindow::NextGen()
             }// else if neighbors is 3 set snadbox to true and add to the living cell count
             else if (neighbors == 3)
             {
-                sandbox[row][col] = true;
+                gameBoard[row][col] = true;
                 ++livCells;
             }
             else// else set sandbox to false 
             {
-                sandbox[row][col] = false;
+                gameBoard[row][col] = false;
             }
         }
     }
     
-    //Overwriting the data of gameBoard with sandBox and discarding sandBox
-    gameBoard.swap(sandbox);
 
     //Adding to the genration after all the checks are done 
     Gen += 1;
@@ -387,7 +477,6 @@ void MainWindow::NextGen()
    
 }
 
-// Time method setting a timer
 void MainWindow::Timer(wxTimerEvent& event)
 {
     // Calling the next gen method
@@ -397,21 +486,9 @@ void MainWindow::Timer(wxTimerEvent& event)
     setting.time;
 }
 
-//Helper method for adding the right arugments to the Addtool method
 void MainWindow::addToolFields(int ID, std::string name, wxBitmapBundle icon)
 {
     toolBar->AddTool(ID, name, icon);
-}
-
-//Updating my status bar
-void MainWindow::UpdateStatusBar(int alive)
-{  
-    //Adding the alive cells to livcells
-    livCells += alive;
-   
-    // updating the test for the bar
-    StatusBarText();
-    
 }
 
 

@@ -5,6 +5,11 @@ VisualStudioVersion = 17.3.32901.215
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GameOfLife", "GameOfLife\GameOfLife.vcxproj", "{09F8DA65-2B9F-43D1-9BC5-1842D9824AAA}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1EDA93FF-010E-43BC-A185-0EA6179382F2}"
+	ProjectSection(SolutionItems) = preProject
+		TO-DO.txt = TO-DO.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64

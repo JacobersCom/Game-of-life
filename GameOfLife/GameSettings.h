@@ -3,10 +3,12 @@
 #include "wx/spinctrl.h"
 #include <iostream>
 #include <fstream>
+
+
 struct gameSetting {
 public:
-	int gridSize = 15;
-	int time; 
+	int gridSize;
+	int time = 5;
 	bool neighbor;
 	
 	unsigned int Red = 128;
@@ -47,6 +49,10 @@ public:
 	int GetInterval() const {
 		
 		return time;
+	}
+	void SetInterval(int newInterval){
+		
+		time = newInterval;
 	}
 	void LoadingData()
 	{

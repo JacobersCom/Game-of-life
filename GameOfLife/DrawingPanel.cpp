@@ -49,10 +49,11 @@ void DrawingPanel::Cell()
 // Definition of the OnPaint method, which handles paint events
 void DrawingPanel::OnPaint(wxPaintEvent& event)
 {
-   
-
+   window->GridInitializtion();
     int gridSize = settings->GetGridSize();
+   
     // Create a buffered device context to reduce flicker
+    
     wxAutoBufferedPaintDC dc(this);
    
     // Clear the drawing area
@@ -75,29 +76,21 @@ void DrawingPanel::OnPaint(wxPaintEvent& event)
     context->SetBrush(*wxWHITE); 
     
     // loop over the girdSize and adding rows to it
-    for (int row = 0; row < gridSize; ++row) 
+    float cellWidth = GetSize().GetWidth() / static_cast<float>(gridSize);
+    float cellHeight = GetSize().GetHeight() / static_cast<float>(gridSize);
+    
+    for (int row = 0; row < gridSize; row++) 
     {
         // looping over the girdSize and adding columes to it
-        for (int col = 0; col < gridSize; ++col)
+        
+        for (int col = 0; col < gridSize; col++)
         {
-            int neighbors = window->NeighborCounter(row, col);
-            if (neighbors > 0 && settings->neighbor)
-            {
-                context->SetFont(wxFontInfo(16), *wxRED);
-                wxString neighborCount = wxString::Format("%d", neighbors);
-                double width, heigh;
-                context->GetTextExtent(neighborCount, &width, &heigh);
-                int x = row * cellWidth + (cellWidth - width) /2;
-                int y = col * cellHeight + (cellHeight - heigh) /2;
-                context->DrawText(neighborCount, x, y);
-                this->Refresh();
-            }
             
             // x is col times cellwidth
-            int x = row * cellWidth;
+            float x = static_cast<float>(row) * cellWidth;
 
             // y is row times cell height
-            int y = col * cellHeight;
+            float y = static_cast<float>(col) * cellHeight;
 
                 if (drawingBoard[row][col])
                 {
@@ -111,10 +104,29 @@ void DrawingPanel::OnPaint(wxPaintEvent& event)
             // Taking the context variable and calling DrawRec and passing in the x,y and width and height
             context->DrawRectangle(x, y, cellWidth, cellHeight); 
             
+            int neighbors = window->NeighborCounter(row, col);
+            
+            if (neighbors > 0 && settings->neighbor)
+            {
+                context->SetFont(wxFontInfo(11), *wxRED);
+               
+                wxString neighborCount = wxString::Format("%d", neighbors);
+                
+                double width, heigh;
+                
+                context->GetTextExtent(neighborCount, &width, &heigh);
+                
+                int x = row * cellWidth + (cellWidth - width) /2;
+                
+                int y = col * cellHeight + (cellHeight - heigh) /2;
+                
+                context->DrawText(neighborCount, x, y);
+                
+            }
+            
         }
     }
     // Clean up and delete the graphics context
-   
     delete context; 
     
 }
@@ -145,12 +157,15 @@ void DrawingPanel::onClick(wxMouseEvent& event)
 { 
     int gridSize = settings->GetGridSize();
     //Getting the point of where the mouse clicked
-    int x = event.GetX();
-    int y = event.GetY();
+    float x = event.GetX();
+    float y = event.GetY();
 
    // Using where the mouse clicked to calulate the row and col 
-    int rowClicked = x / cellWidth;
-    int colClicked = y / cellHeight;
+    float cellWidth = GetSize().GetWidth() / static_cast<float>(gridSize);
+    float cellHeight = GetSize().GetHeight() / static_cast<float>(gridSize);
+
+    float rowClicked = x / cellWidth;
+    float colClicked = y / cellHeight;
 
     // checking if where the mouse clicked was within range of the grid
     if (rowClicked >= 0 && rowClicked < gridSize && colClicked >= 0 && colClicked < gridSize)
